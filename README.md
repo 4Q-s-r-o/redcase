@@ -1,5 +1,5 @@
 
-# Redcase - Redmine 6.0 Compatible
+# Redcase - Redmine 6.1 Compatible
 
 Test case management plugin for Redmine - Updated for Redmine 6.0
 -----------------------------------------------------------------
@@ -12,6 +12,7 @@ Redcase allows you to create, manage, and execute test cases, group them into te
 
 - **Original Plugin**: [Bugzinga Redcase](https://github.com/bugzinga/redcase)
 - **Redmine 6.0 Upgrade**: [Uforia Infotech](https://uforiainfotech.com)
+- **Redmine 6.0 Upgrade**: [Martin Hlavňa](https://github.com/4Q-s-r-o/redcase)
 - **Developer Page** [Usman Shaukat](https://github.com/usmanpakistan)
 
 ## Features
