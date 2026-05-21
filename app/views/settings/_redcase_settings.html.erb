@@ -1,0 +1,15 @@
+<p>
+  <label><%= l(:label_redcase_tracker_name) %>:</label>
+  <%= text_field_tag 'settings[tracker_name]', settings[:tracker_name], :size => 40 %>
+  <em style="color: #888; font-size: 0.9em;">(<%= l(:label_redcase_default) %>: "Test case")</em>
+</p>
+<p>
+  <label><%= l(:label_redcase_active_status) %>:</label>
+  <%= text_field_tag 'settings[active_status]', settings[:active_status], :size => 40 %>
+  <em style="color: #888; font-size: 0.9em;">(<%= l(:label_redcase_default) %>: "In Progress")</em>
+</p>
+<p>
+  <label><%= l(:label_redcase_obsolete_status) %>:</label>
+  <%= text_field_tag 'settings[obsolete_status]', settings[:obsolete_status], :size => 40 %>
+  <em style="color: #888; font-size: 0.9em;">(<%= l(:label_redcase_default) %>: "Obsolete")</em>
+</p>

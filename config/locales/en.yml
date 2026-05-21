@@ -24,3 +24,7 @@ en:
   label_full_report             : "Full Report"
   label_test_case_specification : "Test case specification"
   label_button_save             : "save"
+  label_redcase_tracker_name    : "Tracker name"
+  label_redcase_active_status   : "Active status name"
+  label_redcase_obsolete_status : "Obsolete status name"
+  label_redcase_default         : "default"

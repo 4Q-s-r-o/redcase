@@ -10,7 +10,19 @@ class TestCase < ActiveRecord::Base
 	)
 	has_many :execution_journals, :dependent => :destroy
 	# attr_protected :id
-  #
+
+	def self.tracker_name
+		Setting.plugin_redcase['tracker_name'].presence || 'Test case'
+	end
+
+	def self.active_status
+		Setting.plugin_redcase['active_status'].presence || 'In Progress'
+	end
+
+	def self.obsolete_status
+		Setting.plugin_redcase['obsolete_status'].presence || 'Obsolete'
+	end
+
 	def copy_to(project)
 		new_issue = Issue.new
 		new_issue.copy_from(issue, :subtasks => false)
@@ -48,7 +60,7 @@ class TestCase < ActiveRecord::Base
 	def self.remove_orphaned(issues)
 		missed_tc = issues.collect { |issue|
 			tc = issue.test_case
-			tc if (tc && (issue.tracker.name != 'Test case'))
+			tc if (tc && (issue.tracker.name != TestCase.tracker_name))
 		}.compact
 		missed_tc.each { |tc| tc.destroy }
 	end
@@ -57,7 +69,7 @@ class TestCase < ActiveRecord::Base
 	# ".Unsorted" test suite.
 	def self.move_unsorted(issues, project)
 		unlinked_issues = issues.select { |issue|
-			(issue.tracker.name == 'Test case') && issue.test_case.nil?
+			(issue.tracker.name == TestCase.tracker_name) && issue.test_case.nil?
 		}
 		unlinked_issues.each { |issue|
 			x = TestCase.create(
@@ -70,10 +82,8 @@ class TestCase < ActiveRecord::Base
 	end
 
 	def self.cleanup_obsolete(issues, project)
-		# Move all test cases with status "Obsolete" to ".Obsolete" test suite
-		# if they aren't already there.
 		obsoleted_issues = issues.select { |issue|
-			(issue.tracker.name == 'Test case') && (issue.status.name == 'Obsolete')
+			(issue.tracker.name == TestCase.tracker_name) && (issue.status.name == TestCase.obsolete_status)
 		}
 		obsoleted_issues.each { |issue|
 			if !issue.test_case.nil?
@@ -128,17 +138,18 @@ class TestCase < ActiveRecord::Base
 				''
 			end
 		{
-			'id'        => "issue_#{issue_id}",
-			'issue_id'  => issue_id,
-			'text'      => atext,
-			'editable'  => false,
-			'desc'      => textilized_description,
-			'leaf'      => true,
-			'status'    => issue.status,
-			'iconCls'   => "testcase-result-icon-#{last_result}",
-			'icon'      => "testcase-result-icon-#{last_result}",
-			'draggable' => true,
-			'qtipCfg'   => {
+			'id'         => "issue_#{issue_id}",
+			'issue_id'   => issue_id,
+			'text'       => atext,
+			'editable'   => false,
+			'desc'       => textilized_description,
+			'leaf'       => true,
+			'status'     => issue.status,
+			'executable' => (issue.status.name == TestCase.active_status),
+			'iconCls'    => "testcase-result-icon-#{last_result}",
+			'icon'       => "testcase-result-icon-#{last_result}",
+			'draggable'  => true,
+			'qtipCfg'    => {
 				:cls          => 'test',
 				:width        => '500',
 				:closable     => 'true',
@@ -155,9 +166,9 @@ class TestCase < ActiveRecord::Base
 				:title        => "Issue ##{issue.id}",
 				:dismissDelay => 30000
 			},
-			'type'      => 'case',
-			'state'     => {
-				'disabled' => (issue.status.name != 'In Progress')
+			'type'       => 'case',
+			'state'      => {
+				'disabled' => (issue.status.name != TestCase.active_status)
 			}
 		}
 	end

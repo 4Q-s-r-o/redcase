@@ -21,6 +21,12 @@ Redmine::Plugin.register :redcase do
 	author 'Bugzinga Team'
 	version '1.0'
 
+	settings :default => {
+		'tracker_name'    => 'Test case',
+		'active_status'   => 'In Progress',
+		'obsolete_status' => 'Obsolete'
+	}, :partial => 'settings/redcase_settings'
+
 	permission :view_test_cases, {
 		:redcase => [
 			:index,
@@ -134,7 +140,8 @@ Redmine::Plugin.register :redcase do
 			:if => proc { |p|
 				can_view = User.current.allowed_to?(:view_test_cases, p)
 				can_edit = User.current.allowed_to?(:edit_test_cases, p)
-				tracker_exists = p.trackers.any? { |t| (t.name == 'Test case') }
+				tracker_name = Setting.plugin_redcase['tracker_name'].presence || 'Test case'
+				tracker_exists = p.trackers.any? { |t| t.name == tracker_name }
 				(can_view || can_edit) && tracker_exists
 			},
 			:caption => 'Test cases',

@@ -325,7 +325,7 @@ Redcase.ExecutionSuiteTree.moveTestSuite = function (new_node, org_node, new_ins
 
 Redcase.ExecutionSuiteTree.copyTestCase = function (new_node, org_node, new_instance, old_instance) {
 	var	apiParms = {};
-	if (org_node.original.status.name === "In Progress") {
+	if (org_node.original.executable) {
 		new_node.original = org_node.original;
 		new_instance.set_id(new_node, org_node.id);
 		
